@@ -41,13 +41,13 @@
         
         .widget-wrapper {
             flex: 0 0 auto;
-            width: 140px;
-            height: 290px; /* Increased height for wrapper */
+            width: 154px; /* 10% wider: 140 * 1.1 = 154px */
+            height: 261px; /* 10% shorter: 290 * 0.9 = 261px */
             border-radius: 66px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             background-color: #ffb6a9;
-            padding: 30px 0 40px 0; /* Less top padding, more bottom */
+            padding: 28px 0 38px 0; /* Adjusted padding for centering */
             box-sizing: border-box;
             display: flex;
             align-items: center;
@@ -56,13 +56,13 @@
         
         .widget-wrapper .weatherwidget-io {
             border-radius: 66px !important;
-            width: 140px !important;
-            height: 220px !important; /* Taller iframe to show all content */
+            width: 154px !important;
+            height: 195px !important; /* Adjusted proportionally */
         }
         
         .widget-wrapper iframe {
-            height: 220px !important;
-            width: 140px !important;
+            height: 195px !important;
+            width: 154px !important;
             display: block !important;
         }
     </style>
