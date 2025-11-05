@@ -41,18 +41,17 @@
         
         .widget-wrapper {
             flex: 0 0 auto;
-            width: 154px; /* Narrower */
-            height: 240px; /* Taller */
-            border-radius: 66px; /* More rounded */
-            overflow: hidden;
+            border-radius: 66px;
+            overflow: visible; /* Changed from hidden to visible */
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            background-color: #ffb6a9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         
         .widget-wrapper .weatherwidget-io {
+            border-radius: 66px !important;
+        }
+        
+        /* Let the iframe size itself */
+        .widget-wrapper iframe {
             border-radius: 66px !important;
         }
     </style>
@@ -96,7 +95,7 @@
         
         <!-- Vass, NC -->
         <div class="widget-wrapper">
-            <a class="weatherwidget-io" href="https://forecast7.com/en/35d26n79d28/vass/?unit=us" data-label_1="VASS" data-label_2="NORTH CAROLINA" data-font="Arial Black" data-icons="Climacos Animated" data-mode="Current" data-days="3" data-theme="original" data-basecolor="#ffb6a9" data-textcolor="#AB1717" data-suncolor="#ff6c30" data-mooncolor="#FFE87C" data-cloudcolor="#A1AED1" data-cloudfill="#dfdefe" data-raincolor="#0b7ab8">VASS NORTH CAROLINA</a>
+            <a class="weatherwidget-io" href="https://forecast7.com/en/35d26n79d28/vass/?unit=us" data-label_1="VASS" data-label_2="NORTH CAROLINA" data-font="Arial Black" data-icons="Climacons Animated" data-mode="Current" data-days="3" data-theme="original" data-basecolor="#ffb6a9" data-textcolor="#AB1717" data-suncolor="#ff6c30" data-mooncolor="#FFE87C" data-cloudcolor="#A1AED1" data-cloudfill="#dfdefe" data-raincolor="#0b7ab8">VASS NORTH CAROLINA</a>
         </div>
     </div>
     
