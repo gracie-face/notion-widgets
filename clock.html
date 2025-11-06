@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>World Clock — Retro Split-Flap (Unified Pill, C1 – tuned)</title>
+<title>World Clock — Retro Split-Flap (Unified Pill, C1 + AM/PM + Date)</title>
 <style>
   :root{
     /* Brand palette E */
@@ -13,9 +13,12 @@
     --flap-fg:#E6F0A2;   /* split-flap digit color */
     --shadow:0 10px 24px rgba(0,0,0,.14), 0 2px 6px rgba(0,0,0,.10);
 
-    /* spacing vars so dividers sit BETWEEN columns */
-    --g: clamp(10px, 1.4vw, 18px);  /* column gap */
+    /* layout sizing */
+    --g: clamp(10px, 1.4vw, 18px);        /* column gap */
     --inner-pad: clamp(14px, 2.2vw, 28px);
+    --tile-w: clamp(52px, 6.2vw, 78px);
+    --tile-h: clamp(58px, 7.2vw, 88px);
+    --tile-font: clamp(34px, 4vw, 54px);
   }
 
   *{box-sizing:border-box}
@@ -31,11 +34,11 @@
     background:var(--seed);
     border-radius:64px;
     box-shadow:var(--shadow);
-    padding:20px var(--inner-pad);
+    padding:22px var(--inner-pad);
     overflow:hidden; /* keep everything inside rounded pill */
   }
 
-  /* Zones inside the pill – responsive grid */
+  /* Zones grid */
   .zones{
     display:grid;
     grid-template-columns: repeat(3, 1fr);
@@ -43,60 +46,68 @@
     position:relative;
     align-items:center;
   }
-
-  /* C1: thin vertical divider lines exactly BETWEEN zones (hidden on stack) */
+  /* C1 dividers – exactly in the gap */
   @media (min-width: 860px){
     .zone{ position:relative; }
     .zone:not(:last-child)::after{
       content:"";
       position:absolute; top:6%; bottom:6%;
-      right: calc(var(--g) / -2);        /* push to center of the gap */
+      right: calc(var(--g) / -2);
       width:2px; background:rgba(71,81,11,.18); border-radius:2px;
       pointer-events:none;
     }
   }
-
-  /* Break to 2 columns on medium screens */
   @media (max-width: 1020px){
     .zones{ grid-template-columns: repeat(2, 1fr); }
   }
-  /* Stack vertically on small screens / narrow Notion embeds */
   @media (max-width: 680px){
     .zones{ grid-template-columns: 1fr; }
   }
 
   .zone{
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
     padding: clamp(6px, 1.2vw, 10px) clamp(6px, 1.6vw, 12px);
     text-align:center;
-    min-width:0;   /* allow inner content to shrink instead of overflow */
+    min-width:0;
   }
 
   .label{
     font-weight:900; letter-spacing:1px; text-transform:uppercase;
     font-size: clamp(11px, 1.1vw, 13px);
-    margin-bottom: clamp(8px, 1.0vw, 12px);
+    margin-bottom: clamp(8px, 1.0vw, 10px);
   }
 
-  /* ===== Split-flap time row ===== */
-  .time{
-    display:flex; align-items:stretch; justify-content:center;
+  /* ===== CLOCK ROW (aligned across zones) ===== */
+  .row{
+    /* fixed band so every zone's numbers share same baseline */
+    min-height: calc(var(--tile-h) + 6px);
+    display:flex; align-items:center; justify-content:center;
     gap: clamp(4px, .8vw, 8px);
     padding: 2px 0;
-    min-width:0;  /* keep from pushing outside column */
+    width:100%;
+    min-width:0;
+  }
+  .time{ display:flex; align-items:stretch; justify-content:center; gap: clamp(4px, .8vw, 8px); }
+
+  .ampm{
+    margin-left: clamp(8px, 1.1vw, 12px);
+    font-weight:900; letter-spacing:.5px;
+    font-size: clamp(12px, 1.4vw, 16px);
+    text-transform:uppercase;
+    color: rgba(71,81,11,.95);
+    white-space:nowrap;
   }
 
   .tile{
     position:relative;
-    /* ↓ slightly smaller to fit inside one pill on desktop */
-    width: clamp(52px, 6.2vw, 78px);
-    height: clamp(58px, 7.2vw, 88px);
+    width: var(--tile-w);
+    height: var(--tile-h);
     background: var(--flap-bg);
     color: var(--flap-fg);
     border-radius: 14px;
     display:flex; align-items:center; justify-content:center;
     font-family: "Roboto Mono", SFMono-Regular, Menlo, Consolas, monospace;
-    font-weight:800; font-size: clamp(34px, 4vw, 54px);
+    font-weight:800; font-size: var(--tile-font);
     letter-spacing:1px;
     box-shadow: inset 0 -5px 0 rgba(0,0,0,.25), inset 0 6px 0 rgba(255,255,255,.06);
     overflow:hidden;
@@ -133,15 +144,24 @@
   @keyframes flipFront{ to{ transform:rotateX(180deg) } }
   @keyframes flipBack { to{ transform:rotateX(0deg)   } }
 
-  /* City list */
+  /* Date */
+  .date{
+    margin-top: clamp(6px, .9vw, 10px);
+    font-weight:900; letter-spacing:.4px;
+    font-size: clamp(11px, 1.2vw, 13px);
+    min-height: 1.4em;  /* reserve space so rows stay aligned */
+  }
+
+  /* City list – compact; fixed band height to avoid pushing clocks */
   .cities{
-    margin-top: clamp(8px, 1.0vw, 12px);
-    display:flex; flex-direction:column; gap:3px;
+    margin-top: clamp(6px, .9vw, 10px);
+    display:flex; flex-direction:column; gap:2px;
+    min-height: 4.2em; /* equalize height across zones */
   }
   .cities div{
     text-transform:uppercase;
-    font-weight:900; letter-spacing:.35px;
-    font-size: clamp(11px, 1.2vw, 13px);
+    font-weight:900; letter-spacing:.3px;
+    font-size: clamp(10px, 1.05vw, 12px);
   }
 </style>
 </head>
@@ -172,12 +192,18 @@ const ZONES = [
 ];
 
 /* ===== Helpers ===== */
-function hhmm(date, tz){
-  // returns "HH:MM" (12h, zero-padded) – remove whitespace
-  const s = new Intl.DateTimeFormat(undefined,{
+function timeParts(date, tz){
+  // 12-hour with AM/PM, returns { h1,h2,m1,m2,ampm }
+  const f = new Intl.DateTimeFormat(undefined,{
     hour:'2-digit', minute:'2-digit', hour12:true, timeZone:tz
-  }).format(date).replace(/\s/g,'');
-  return s.slice(0,5);
+  }).format(date).replace(/\s/g,''); // "09:42AM"
+  return { h1:f[0], h2:f[1], m1:f[3], m2:f[4], ampm: f.slice(5).toUpperCase() };
+}
+function shortDate(date, tz){
+  const fmt = new Intl.DateTimeFormat(undefined,{
+    weekday:'short', month:'short', day:'numeric', timeZone:tz
+  }).format(date); // "Tue, Feb 11"
+  return fmt;
 }
 
 function createTile(d="0"){
@@ -195,7 +221,7 @@ function createColon(){
 
 /* ===== Render zones ===== */
 const zonesEl = document.getElementById('zones');
-const zoneTiles = []; // store tile refs per zone
+const zoneRefs = []; // {tiles:[t1,t2,t3,t4], ampmEl, dateEl}
 
 ZONES.forEach(z=>{
   const zone = document.createElement('section');
@@ -205,6 +231,9 @@ ZONES.forEach(z=>{
   label.className = 'label';
   label.textContent = z.label;
 
+  const row = document.createElement('div');
+  row.className = 'row';
+
   const time = document.createElement('div');
   time.className = 'time';
   const t1 = createTile('0');
@@ -212,6 +241,16 @@ ZONES.forEach(z=>{
   const t3 = createTile('0');
   const t4 = createTile('0');
   time.append(t1,t2,createColon(),t3,t4);
+
+  const ampm = document.createElement('div');
+  ampm.className = 'ampm';
+  ampm.textContent = 'AM';
+
+  row.append(time, ampm);
+
+  const date = document.createElement('div');
+  date.className = 'date';
+  date.textContent = '';
 
   const cities = document.createElement('div');
   cities.className = 'cities';
@@ -221,13 +260,14 @@ ZONES.forEach(z=>{
     cities.appendChild(it);
   });
 
-  zone.append(label,time,cities);
+  zone.append(label,row,date,cities);
   zonesEl.appendChild(zone);
-  zoneTiles.push([t1,t2,t3,t4]);
+  zoneRefs.push({tiles:[t1,t2,t3,t4], ampmEl: ampm, dateEl: date, tz: z.tz});
 });
 
 /* ===== Flip logic ===== */
-let last = [];
+let lastDigits = []; // per zone "h1h2m1m2"
+let lastDate   = []; // per zone date string
 
 function setFaces(tile, d){
   tile.querySelector('.front').textContent = d;
@@ -242,21 +282,31 @@ function flipTo(tile, d){
 
 function tick(){
   const now = new Date();
-  ZONES.forEach((z, i)=>{
-    const s = hhmm(now, z.tz);           // "09:42"
-    const digs = [s[0],s[1],s[3],s[4]];  // ["0","9","4","2"]
+  zoneRefs.forEach((ref, i)=>{
+    const p = timeParts(now, ref.tz);
+    const digs = [p.h1,p.h2,p.m1,p.m2];
 
-    if(!last[i]){ // first paint
-      digs.forEach((d, j)=> setFaces(zoneTiles[i][j], d));
-      last[i] = digs.join('');
-      return;
+    // first paint
+    if(!lastDigits[i]){
+      digs.forEach((d, j)=> setFaces(ref.tiles[j], d));
+      lastDigits[i] = digs.join('');
+    }else{
+      const prev = lastDigits[i].split('');
+      digs.forEach((d, j)=>{
+        if(d !== prev[j]) flipTo(ref.tiles[j], d);
+      });
+      lastDigits[i] = digs.join('');
     }
 
-    const prev = last[i].split('');
-    digs.forEach((d, j)=>{
-      if(d !== prev[j]) flipTo(zoneTiles[i][j], d);
-    });
-    last[i] = digs.join('');
+    // AM/PM
+    ref.ampmEl.textContent = p.ampm;
+
+    // Date (short)
+    const dstr = shortDate(now, ref.tz);
+    if(dstr !== lastDate[i]){
+      ref.dateEl.textContent = dstr;
+      lastDate[i] = dstr;
+    }
   });
 }
 
