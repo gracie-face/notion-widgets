@@ -35,13 +35,13 @@
       box-shadow:0 2px 10px rgba(0,0,0,.1);
       overflow:hidden;
       display:flex;
-      align-items:center;      /* center the injected widget vertically */
-      justify-content:center;  /* center horizontally */
+      align-items:center;
+      justify-content:center;
       box-sizing:border-box;
       padding:0;
     }
 
-    /* Let WeatherWidget render itself; just make it fill the pill and keep round corners */
+    /* ✅ Fill pill + vertical centering */
     .weatherwidget-io{
       width:100% !important;
       height:100% !important;
@@ -49,12 +49,13 @@
       display:block !important;
       text-decoration:none !important;
       color:inherit !important;
+      transform: translateY(18%); /* ✅ centered */
     }
   </style>
 </head>
 <body>
   <div class="weather-container">
-    <!-- Brooklyn, NY -->
+
     <div class="widget-wrapper">
       <a class="weatherwidget-io"
          href="https://forecast7.com/en/40d71n74d01/new-york/?unit=us"
@@ -73,7 +74,6 @@
          data-raincolor="#0b7ab8">BROOKLYN NEW YORK</a>
     </div>
 
-    <!-- Hood River, OR -->
     <div class="widget-wrapper">
       <a class="weatherwidget-io"
          href="https://forecast7.com/en/45d71n121d52/hood-river/?unit=us"
@@ -92,7 +92,6 @@
          data-raincolor="#0b7ab8">HOOD RIVER OREGON</a>
     </div>
 
-    <!-- Wiscasset, ME -->
     <div class="widget-wrapper">
       <a class="weatherwidget-io"
          href="https://forecast7.com/en/44d00n69d67/wiscasset/?unit=us"
@@ -111,7 +110,6 @@
          data-raincolor="#0b7ab8">WISCASSET MAINE</a>
     </div>
 
-    <!-- Bend, OR -->
     <div class="widget-wrapper">
       <a class="weatherwidget-io"
          href="https://forecast7.com/en/44d06n121d32/bend/?unit=us"
@@ -130,7 +128,6 @@
          data-raincolor="#0b7ab8">BEND OREGON</a>
     </div>
 
-    <!-- Monterey, CA -->
     <div class="widget-wrapper">
       <a class="weatherwidget-io"
          href="https://forecast7.com/en/36d60n121d89/monterey/?unit=us"
@@ -149,7 +146,6 @@
          data-raincolor="#0b7ab8">MONTEREY CALIFORNIA</a>
     </div>
 
-    <!-- Los Angeles, CA -->
     <div class="widget-wrapper">
       <a class="weatherwidget-io"
          href="https://forecast7.com/en/34d05n118d24/los-angeles/?unit=us"
@@ -168,7 +164,6 @@
          data-raincolor="#0b7ab8">LOS ANGELES CALIFORNIA</a>
     </div>
 
-    <!-- Lagos, Nigeria -->
     <div class="widget-wrapper">
       <a class="weatherwidget-io"
          href="https://forecast7.com/en/6d523d38/lagos/?unit=us"
@@ -187,7 +182,6 @@
          data-raincolor="#0b7ab8">LAGOS NIGERIA</a>
     </div>
 
-    <!-- Vass, NC -->
     <div class="widget-wrapper">
       <a class="weatherwidget-io"
          href="https://forecast7.com/en/35d26n79d28/vass/?unit=us"
@@ -205,6 +199,7 @@
          data-cloudfill="#dfdefe"
          data-raincolor="#0b7ab8">VASS NORTH CAROLINA</a>
     </div>
+
   </div>
 
   <script>
