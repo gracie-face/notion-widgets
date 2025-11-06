@@ -3,51 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Weather Widgets</title>
+  <title>Weather Widgets (Current Only)</title>
   <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+    body{
+      margin:0;
+      padding:20px;
+      font-family:Arial, sans-serif;
+      background:#f5f5f5;
     }
-
-    .weather-container {
-      display: flex;
-      overflow-x: auto;
-      gap: 20px;
-      padding: 10px;
-      scrollbar-width: thin;
-      scrollbar-color: #888 #f1f1f1;
+    .weather-container{
+      display:flex;
+      overflow-x:auto;
+      gap:20px;
+      padding:10px;
+      scrollbar-width:thin;
+      scrollbar-color:#888 #f1f1f1;
     }
+    .weather-container::-webkit-scrollbar{height:8px}
+    .weather-container::-webkit-scrollbar-track{background:#f1f1f1;border-radius:10px}
+    .weather-container::-webkit-scrollbar-thumb{background:#888;border-radius:10px}
+    .weather-container::-webkit-scrollbar-thumb:hover{background:#555}
 
-    .weather-container::-webkit-scrollbar { height: 8px; }
-    .weather-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-    .weather-container::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
-    .weather-container::-webkit-scrollbar-thumb:hover { background: #555; }
-
-    .widget-wrapper {
-      flex: 0 0 auto;
-      width: 161px;     /* 15% wider than original 140 */
-      height: 261px;    /* 10% shorter than original 290 */
-      border-radius: 60px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      background-color: #ffb6a9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
+    .widget-wrapper{
+      flex:0 0 auto;
+      width:161px;              /* 15% wider */
+      height:261px;             /* 10% shorter */
+      border-radius:60px;
+      overflow:hidden;
+      background:#ffb6a9;       /* pill color */
+      box-shadow:0 2px 10px rgba(0,0,0,.1);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      box-sizing:border-box;
     }
-
-    /* Let the script replace and size content; only round the corners */
-    .weatherwidget-io {
-      width: 100% !important;
-      height: 100% !important;
-      border-radius: 60px !important;
-      display: block;
-      text-decoration: none;
-      color: inherit;
+    .pill-frame{
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
     }
   </style>
 </head>
@@ -55,166 +50,59 @@
   <div class="weather-container">
     <!-- Brooklyn, NY -->
     <div class="widget-wrapper">
-      <a class="weatherwidget-io"
-         href="https://forecast7.com/en/40d71n74d01/new-york/?unit=us"
-         data-label_1="BROOKLYN"
-         data-label_2="NEW YORK"
-         data-font="Arial Black"
-         data-icons="Climacons Animated"
-         data-mode="Current"
-         data-theme="original"
-         data-basecolor="#ffb6a9"
-         data-textcolor="#AB1717"
-         data-suncolor="#ff6c30"
-         data-mooncolor="#FFE87C"
-         data-cloudcolor="#A1AED1"
-         data-cloudfill="#dfdefe"
-         data-raincolor="#0b7ab8">BROOKLYN NEW YORK</a>
+      <iframe class="pill-frame"
+        src="https://weatherwidget.io/w/?q=brooklyn%20new%20york&unit=us&mode=Current&theme=original&labels=BROOKLYN%20NEW%20YORK">
+      </iframe>
     </div>
 
     <!-- Hood River, OR -->
     <div class="widget-wrapper">
-      <a class="weatherwidget-io"
-         href="https://forecast7.com/en/45d71n121d52/hood-river/?unit=us"
-         data-label_1="HOOD RIVER"
-         data-label_2="OREGON"
-         data-font="Arial Black"
-         data-icons="Climacons Animated"
-         data-mode="Current"
-         data-theme="original"
-         data-basecolor="#ffb6a9"
-         data-textcolor="#AB1717"
-         data-suncolor="#ff6c30"
-         data-mooncolor="#FFE87C"
-         data-cloudcolor="#A1AED1"
-         data-cloudfill="#dfdefe"
-         data-raincolor="#0b7ab8">HOOD RIVER OREGON</a>
+      <iframe class="pill-frame"
+        src="https://weatherwidget.io/w/?q=hood%20river%20oregon&unit=us&mode=Current&theme=original&labels=HOOD%20RIVER%20OREGON">
+      </iframe>
     </div>
 
     <!-- Wiscasset, ME -->
     <div class="widget-wrapper">
-      <a class="weatherwidget-io"
-         href="https://forecast7.com/en/44d00n69d67/wiscasset/?unit=us"
-         data-label_1="WISCASSET"
-         data-label_2="MAINE"
-         data-font="Arial Black"
-         data-icons="Climacons Animated"
-         data-mode="Current"
-         data-theme="original"
-         data-basecolor="#ffb6a9"
-         data-textcolor="#AB1717"
-         data-suncolor="#ff6c30"
-         data-mooncolor="#FFE87C"
-         data-cloudcolor="#A1AED1"
-         data-cloudfill="#dfdefe"
-         data-raincolor="#0b7ab8">WISCASSET MAINE</a>
+      <iframe class="pill-frame"
+        src="https://weatherwidget.io/w/?q=wiscasset%20maine&unit=us&mode=Current&theme=original&labels=WISCASSET%20MAINE">
+      </iframe>
     </div>
 
     <!-- Bend, OR -->
     <div class="widget-wrapper">
-      <a class="weatherwidget-io"
-         href="https://forecast7.com/en/44d06n121d32/bend/?unit=us"
-         data-label_1="BEND"
-         data-label_2="OREGON"
-         data-font="Arial Black"
-         data-icons="Climacons Animated"
-         data-mode="Current"
-         data-theme="original"
-         data-basecolor="#ffb6a9"
-         data-textcolor="#AB1717"
-         data-suncolor="#ff6c30"
-         data-mooncolor="#FFE87C"
-         data-cloudcolor="#A1AED1"
-         data-cloudfill="#dfdefe"
-         data-raincolor="#0b7ab8">BEND OREGON</a>
+      <iframe class="pill-frame"
+        src="https://weatherwidget.io/w/?q=bend%20oregon&unit=us&mode=Current&theme=original&labels=BEND%20OREGON">
+      </iframe>
     </div>
 
     <!-- Monterey, CA -->
     <div class="widget-wrapper">
-      <a class="weatherwidget-io"
-         href="https://forecast7.com/en/36d60n121d89/monterey/?unit=us"
-         data-label_1="MONTEREY"
-         data-label_2="CALIFORNIA"
-         data-font="Arial Black"
-         data-icons="Climacons Animated"
-         data-mode="Current"
-         data-theme="original"
-         data-basecolor="#ffb6a9"
-         data-textcolor="#AB1717"
-         data-suncolor="#ff6c30"
-         data-mooncolor="#FFE87C"
-         data-cloudcolor="#A1AED1"
-         data-cloudfill="#dfdefe"
-         data-raincolor="#0b7ab8">MONTEREY CALIFORNIA</a>
+      <iframe class="pill-frame"
+        src="https://weatherwidget.io/w/?q=monterey%20california&unit=us&mode=Current&theme=original&labels=MONTEREY%20CALIFORNIA">
+      </iframe>
     </div>
 
     <!-- Los Angeles, CA -->
     <div class="widget-wrapper">
-      <a class="weatherwidget-io"
-         href="https://forecast7.com/en/34d05n118d24/los-angeles/?unit=us"
-         data-label_1="LOS ANGELES"
-         data-label_2="CALIFORNIA"
-         data-font="Arial Black"
-         data-icons="Climacons Animated"
-         data-mode="Current"
-         data-theme="original"
-         data-basecolor="#ffb6a9"
-         data-textcolor="#AB1717"
-         data-suncolor="#ff6c30"
-         data-mooncolor="#FFE87C"
-         data-cloudcolor="#A1AED1"
-         data-cloudfill="#dfdefe"
-         data-raincolor="#0b7ab8">LOS ANGELES CALIFORNIA</a>
+      <iframe class="pill-frame"
+        src="https://weatherwidget.io/w/?q=los%20angeles%20california&unit=us&mode=Current&theme=original&labels=LOS%20ANGELES%20CALIFORNIA">
+      </iframe>
     </div>
 
     <!-- Lagos, Nigeria -->
     <div class="widget-wrapper">
-      <a class="weatherwidget-io"
-         href="https://forecast7.com/en/6d523d38/lagos/?unit=us"
-         data-label_1="LAGOS"
-         data-label_2="NIGERIA"
-         data-font="Arial Black"
-         data-icons="Climacons Animated"
-         data-mode="Current"
-         data-theme="original"
-         data-basecolor="#ffb6a9"
-         data-textcolor="#AB1717"
-         data-suncolor="#ff6c30"
-         data-mooncolor="#FFE87C"
-         data-cloudcolor="#A1AED1"
-         data-cloudfill="#dfdefe"
-         data-raincolor="#0b7ab8">LAGOS NIGERIA</a>
+      <iframe class="pill-frame"
+        src="https://weatherwidget.io/w/?q=lagos%20nigeria&unit=us&mode=Current&theme=original&labels=LAGOS%20NIGERIA">
+      </iframe>
     </div>
 
     <!-- Vass, NC -->
     <div class="widget-wrapper">
-      <a class="weatherwidget-io"
-         href="https://forecast7.com/en/35d26n79d28/vass/?unit=us"
-         data-label_1="VASS"
-         data-label_2="NORTH CAROLINA"
-         data-font="Arial Black"
-         data-icons="Climacons Animated"
-         data-mode="Current"
-         data-theme="original"
-         data-basecolor="#ffb6a9"
-         data-textcolor="#AB1717"
-         data-suncolor="#ff6c30"
-         data-mooncolor="#FFE87C"
-         data-cloudcolor="#A1AED1"
-         data-cloudfill="#dfdefe"
-         data-raincolor="#0b7ab8">VASS NORTH CAROLINA</a>
+      <iframe class="pill-frame"
+        src="https://weatherwidget.io/w/?q=vass%20north%20carolina&unit=us&mode=Current&theme=original&labels=VASS%20NORTH%20CAROLINA">
+      </iframe>
     </div>
   </div>
-
-  <script>
-    !function(d,s,id){
-      var js,fjs=d.getElementsByTagName(s)[0];
-      if(!d.getElementById(id)){
-        js=d.createElement(s);js.id=id;
-        js.src='https://weatherwidget.io/js/widget.min.js';
-        fjs.parentNode.insertBefore(js,fjs);
-      }
-    }(document,'script','weatherwidget-io-js');
-  </script>
 </body>
 </html>
