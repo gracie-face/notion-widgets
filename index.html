@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Weather Widgets (Current Only)</title>
+  <title>Weather Widgets (Centered)</title>
   <style>
     body{
       margin:0;
@@ -26,11 +26,11 @@
 
     .widget-wrapper{
       flex:0 0 auto;
-      width:161px;              /* 15% wider */
-      height:261px;             /* 10% shorter */
+      width:161px;
+      height:261px;
       border-radius:60px;
       overflow:hidden;
-      background:#ffb6a9;       /* pill color */
+      background:#ffb6a9;
       box-shadow:0 2px 10px rgba(0,0,0,.1);
       display:flex;
       align-items:center;
@@ -38,71 +38,43 @@
       position:relative;
       box-sizing:border-box;
     }
+
+    /* ✅ CENTER CONTENT inside iframe */
     .pill-frame{
       width:100%;
       height:100%;
       border:0;
       display:block;
+      transform:translateY(-6%); /* adjust this number if needed */
     }
   </style>
 </head>
 <body>
   <div class="weather-container">
-    <!-- Brooklyn, NY -->
+
     <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=brooklyn%20new%20york&unit=us&mode=Current&theme=original&labels=BROOKLYN%20NEW%20YORK">
-      </iframe>
+      <iframe class="pill-frame" src="https://weatherwidget.io/w/?q=brooklyn%20new%20york&unit=us&mode=Current&theme=original&labels=BROOKLYN%20NEW%20YORK"></iframe>
     </div>
 
-    <!-- Hood River, OR -->
     <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=hood%20river%20oregon&unit=us&mode=Current&theme=original&labels=HOOD%20RIVER%20OREGON">
-      </iframe>
+      <iframe class="pill-frame" src="https://weatherwidget.io/w/?q=hood%20river%20oregon&unit=us&mode=Current&theme=original&labels=HOOD%20RIVER%20OREGON"></iframe>
     </div>
 
-    <!-- Wiscasset, ME -->
     <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=wiscasset%20maine&unit=us&mode=Current&theme=original&labels=WISCASSET%20MAINE">
-      </iframe>
+      <iframe class="pill-frame" src="https://weatherwidget.io/w/?q=wiscasset%20maine&unit=us&mode=Current&theme=original&labels=WISCASSET%20MAINE"></iframe>
     </div>
 
-    <!-- Bend, OR -->
     <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=bend%20oregon&unit=us&mode=Current&theme=original&labels=BEND%20OREGON">
-      </iframe>
+      <iframe class="pill-frame" src="https://weatherwidget.io/w/?q=bend%20oregon&unit=us&mode=Current&theme=original&labels=BEND%20OREGON"></iframe>
     </div>
 
-    <!-- Monterey, CA -->
     <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=monterey%20california&unit=us&mode=Current&theme=original&labels=MONTEREY%20CALIFORNIA">
-      </iframe>
+      <iframe class="pill-frame" src="https://weatherwidget.io/w/?q=monterey%20california&unit=us&mode=Current&theme=original&labels=MONTEREY%20CALIFORNIA"></iframe>
     </div>
 
-    <!-- Los Angeles, CA -->
     <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=los%20angeles%20california&unit=us&mode=Current&theme=original&labels=LOS%20ANGELES%20CALIFORNIA">
-      </iframe>
+      <iframe class="pill-frame" src="https://weatherwidget.io/w/?q=los%20angeles%20california&unit=us&mode=Current&theme=original&labels=LOS%20ANGELES%20CALIFORNIA"></iframe>
     </div>
 
-    <!-- Lagos, Nigeria -->
     <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=lagos%20nigeria&unit=us&mode=Current&theme=original&labels=LAGOS%20NIGERIA">
-      </iframe>
-    </div>
-
-    <!-- Vass, NC -->
-    <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=vass%20north%20carolina&unit=us&mode=Current&theme=original&labels=VASS%20NORTH%20CAROLINA">
-      </iframe>
-    </div>
-  </div>
-</body>
-</html>
+      <iframe class="pill-frame" src="https://weatherwidget.io/w/?q=lagos%20nigeria&unit=us&mode=Current&theme=original&labels=LAGOS%20NIGERIA"
