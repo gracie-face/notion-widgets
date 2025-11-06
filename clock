@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>World Clock — Heyday Pills (Palette E)</title>
+  <style>
+    :root{
+      --pill-w:161px;
+      --pill-h:261px;
+      --pill-r:60px;
+
+      /* Palette E */
+      --pill-bg:#CAD23C;   /* Seed Green */
+      --text:#47510B;      /* Grassy Green */
+      --shadow:0 2px 10px rgba(0,0,0,.1);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      padding:20px;
+      font-family: Arial Black, Arial, sans-serif;
+      background:#f5f5f5;
+      color:var(--text);
+    }
+
+    .clock-container{
+      display:flex;
+      gap:20px;
+      overflow-x:auto;
+      padding:10px;
+      scrollbar-width:thin;
+      scrollbar-color:#888 #f1f1f1;
+    }
+    .clock-container::-webkit-scrollbar{height:8px}
+    .clock-container::-webkit-scrollbar-track{background:#f1f1f1;border-radius:10px}
+    .clock-container::-webkit-scrollbar-thumb{background:#888;border-radius:10px}
+    .clock-container::-webkit-scrollbar-thumb:hover{background:#555}
+
+    .pill{
+      width:var(--pill-w);
+      height:var(--pill-h);
+      border-radius:var(--pill-r);
+      background:var(--pill-bg);
+      box-shadow:var(--shadow);
+      flex:0 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    .inner{
+      width:86%;
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      color:var(--text);
+    }
+
+    .city{
+      font-family: Arial Black, Arial, sans-serif;
+      font-weight:900;
+      letter-spacing:.5px;
+      line-height:1.05;
+      font-size:15px;
+      text-transform:uppercase;
+    }
+
+    .time{
+      font-family: Arial Black, Arial, sans-serif;
+      font-weight:900;
+      font-size:38px;
+      line-height:1;
+    }
+
+    .date{
+      font-family: Arial, sans-serif;
+      font-weight:800;
+      font-size:12px;
+      letter-spacing:.3px;
+      opacity:.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="clock-container" id="wrap"></div>
+
+  <script>
+    const LOCATIONS = [
+      { city1:"BROOKLYN",    city2:"NEW YORK",        tz:"America/New_York" },
+      { city1:"HOOD RIVER",  city2:"OREGON",          tz:"America/Los_Angeles" },
+      { city1:"WISCASSET",   city2:"MAINE",           tz:"America/New_York" },
+      { city1:"BEND",        city2:"OREGON",          tz:"America/Los_Angeles" },
+      { city1:"MONTEREY",    city2:"CALIFORNIA",      tz:"America/Los_Angeles" },
+      { city1:"LOS ANGELES", city2:"CALIFORNIA",      tz:"America/Los_Angeles" },
+      { city1:"LAGOS",       city2:"NIGERIA",         tz:"Africa/Lagos" },
+      { city1:"VASS",        city2:"NORTH CAROLINA",  tz:"America/New_York" },
+    ];
+
+    const wrap = document.getElementById('wrap');
+
+    LOCATIONS.forEach((p, i) => {
+      const pill = document.createElement('div');
+      pill.className = 'pill';
+      pill.innerHTML = `
+        <div class="inner" data-idx="${i}">
+          <div class="city">${p.city1}<br>${p.city2}</div>
+          <div class="time" data-time>--:--</div>
+          <div class="date" data-date>—</div>
+        </div>`;
+      wrap.appendChild(pill);
+    });
+
+    function updateAll(){
+      const now = new Date();
+      document.querySelectorAll('.inner').forEach((node, i) => {
+        const tz = LOCATIONS[i].tz;
+        const opts = { hour:'2-digit', minute:'2-digit', hour12:true, timeZone:tz };
+        node.querySelector('[data-time]').textContent =
+          new Intl.DateTimeFormat(undefined, opts).format(now).replace(/\s/g,'');
+        const dateOpts = { weekday:'short', month:'short', day:'numeric', timeZone:tz };
+        node.querySelector('[data-date]').textContent =
+          new Intl.DateTimeFormat(undefined, dateOpts).format(now);
+      });
+    }
+
+    updateAll();
+    setInterval(updateAll, 1000);
+  </script>
+</body>
+</html>
