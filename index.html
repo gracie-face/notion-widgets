@@ -3,19 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Weather Widgets — Centered Pills</title>
+  <title>Weather Pills — Notion-Friendly (No external iframes)</title>
   <style>
+    :root{
+      --pill-w: 161px;  /* 15% wider than ~140px */
+      --pill-h: 261px;  /* 10% shorter than ~290px */
+      --pill-r: 60px;
+      --pill-bg:#ffb6a9;
+      --text:#AB1717;
+    }
     body{
       margin:0;
       padding:20px;
-      font-family:Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       background:#f5f5f5;
+      color:var(--text);
     }
-
     .weather-container{
       display:flex;
-      overflow-x:auto;
       gap:20px;
+      overflow-x:auto;
       padding:10px;
       scrollbar-width:thin;
       scrollbar-color:#888 #f1f1f1;
@@ -25,85 +32,117 @@
     .weather-container::-webkit-scrollbar-thumb{background:#888;border-radius:10px}
     .weather-container::-webkit-scrollbar-thumb:hover{background:#555}
 
-    /* Pill wrapper (15% wider, 10% shorter) */
-    .widget-wrapper{
-      flex:0 0 auto;
-      width:161px;
-      height:261px;
-      border-radius:60px;
-      background:#ffb6a9;
+    .pill{
+      width:var(--pill-w);
+      height:var(--pill-h);
+      border-radius:var(--pill-r);
+      background:var(--pill-bg);
       box-shadow:0 2px 10px rgba(0,0,0,.1);
-      overflow:hidden;           /* crops the oversize iframe */
-      position:relative;
+      flex:0 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
     }
-
-    /* Center the widget content by oversizing the iframe and nudging up */
-    .pill-frame{
-      width:100%;
-      height:140%;               /* make inner widget taller than pill */
-      border:0;
-      display:block;
-      margin-top:-20%;           /* pull up so content sits centered */
+    .inner{
+      width:86%;
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .city{
+      font-weight:900;
+      letter-spacing:.5px;
+      line-height:1.05;
+      font-size:15px;
+    }
+    .icon{
+      font-size:42px;
+      line-height:1;
+      margin:6px 0;
+    }
+    .temp{
+      font-size:34px;
+      font-weight:900;
+    }
+    .desc{
+      font-weight:800;
+      font-size:14px;
+      text-transform:lowercase;
     }
   </style>
 </head>
 <body>
-  <div class="weather-container">
-    <!-- Brooklyn, NY -->
-    <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=brooklyn%20new%20york&unit=us&mode=Current&theme=original&labels=BROOKLYN%20NEW%20YORK">
-      </iframe>
-    </div>
+  <div class="weather-container" id="wrap"></div>
 
-    <!-- Hood River, OR -->
-    <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=hood%20river%20oregon&unit=us&mode=Current&theme=original&labels=HOOD%20RIVER%20OREGON">
-      </iframe>
-    </div>
+  <script>
+    // Notion-safe: no third-party iframes or external scripts.
+    // Uses free Open-Meteo (no API key, CORS-friendly).
+    const places = [
+      {name1:"BROOKLYN", name2:"NEW YORK", lat:40.6782, lon:-73.9442},
+      {name1:"HOOD RIVER", name2:"OREGON", lat:45.7054, lon:-121.5215},
+      {name1:"WISCASSET", name2:"MAINE", lat:44.0026, lon:-69.6656},
+      {name1:"BEND", name2:"OREGON", lat:44.0582, lon:-121.3153},
+      {name1:"MONTEREY", name2:"CALIFORNIA", lat:36.6002, lon:-121.8947},
+      {name1:"LOS ANGELES", name2:"CALIFORNIA", lat:34.0522, lon:-118.2437},
+      {name1:"LAGOS", name2:"NIGERIA", lat:6.5244, lon:3.3792},
+      {name1:"VASS", name2:"NORTH CAROLINA", lat:35.2563, lon:-79.2836},
+    ];
 
-    <!-- Wiscasset, ME -->
-    <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=wiscasset%20maine&unit=us&mode=Current&theme=original&labels=WISCASSET%20MAINE">
-      </iframe>
-    </div>
+    const codeMap = {
+      0:{t:"clear sky", i:"🌞"}, 1:{t:"mainly clear", i:"🌤️"}, 2:{t:"partly cloudy", i:"⛅"},
+      3:{t:"overcast", i:"☁️"}, 45:{t:"fog", i:"🌫️"}, 48:{t:"rime fog", i:"🌫️"},
+      51:{t:"light drizzle", i:"🌦️"}, 53:{t:"drizzle", i:"🌦️"}, 55:{t:"heavy drizzle", i:"🌧️"},
+      56:{t:"freezing drizzle", i:"🌧️"}, 57:{t:"heavy freezing drizzle", i:"🌧️"},
+      61:{t:"light rain", i:"🌧️"}, 63:{t:"rain", i:"🌧️"}, 65:{t:"heavy rain", i:"🌧️"},
+      66:{t:"freezing rain", i:"🌧️"}, 67:{t:"heavy freezing rain", i:"🌧️"},
+      71:{t:"light snow", i:"🌨️"}, 73:{t:"snow", i:"🌨️"}, 75:{t:"heavy snow", i:"❄️"},
+      77:{t:"snow grains", i:"🌨️"}, 80:{t:"rain showers", i:"🌦️"}, 81:{t:"heavy showers", i:"🌧️"},
+      82:{t:"violent showers", i:"⛈️"}, 85:{t:"snow showers", i:"🌨️"}, 86:{t:"heavy snow showers", i:"❄️"},
+      95:{t:"thunderstorm", i:"⛈️"}, 96:{t:"thunderstorm hail", i:"⛈️"}, 99:{t:"heavy hail storm", i:"⛈️"}
+    };
 
-    <!-- Bend, OR -->
-    <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=bend%20oregon&unit=us&mode=Current&theme=original&labels=BEND%20OREGON">
-      </iframe>
-    </div>
+    const wrap = document.getElementById('wrap');
 
-    <!-- Monterey, CA -->
-    <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=monterey%20california&unit=us&mode=Current&theme=original&labels=MONTEREY%20CALIFORNIA">
-      </iframe>
-    </div>
+    function pillTemplate(p){
+      const el = document.createElement('div');
+      el.className = 'pill';
+      el.innerHTML = `
+        <div class="inner">
+          <div class="city">${p.name1}<br>${p.name2}</div>
+          <div class="icon">…</div>
+          <div class="temp">--°F</div>
+          <div class="desc">loading…</div>
+        </div>`;
+      return el;
+    }
 
-    <!-- Los Angeles, CA -->
-    <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=los%20angeles%20california&unit=us&mode=Current&theme=original&labels=LOS%20ANGELES%20CALIFORNIA">
-      </iframe>
-    </div>
+    async function loadPlace(p, el){
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${p.lat}&longitude=${p.lon}&current=temperature_2m,weather_code&temperature_unit=fahrenheit&timezone=auto`;
+      try{
+        const res = await fetch(url);
+        const data = await res.json();
+        const cur = data.current;
+        const entry = codeMap[cur.weather_code] || {t:"—", i:"☁️"};
+        el.querySelector('.icon').textContent = entry.i;
+        el.querySelector('.temp').textContent = Math.round(cur.temperature_2m) + "°F";
+        el.querySelector('.desc').textContent = entry.t;
+      }catch(e){
+        el.querySelector('.icon').textContent = "⚠️";
+        el.querySelector('.temp').textContent = "--°F";
+        el.querySelector('.desc').textContent = "unavailable";
+      }
+    }
 
-    <!-- Lagos, Nigeria -->
-    <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=lagos%20nigeria&unit=us&mode=Current&theme=original&labels=LAGOS%20NIGERIA">
-      </iframe>
-    </div>
-
-    <!-- Vass, NC -->
-    <div class="widget-wrapper">
-      <iframe class="pill-frame"
-        src="https://weatherwidget.io/w/?q=vass%20north%20carolina&unit=us&mode=Current&theme=original&labels=VASS%20NORTH%20CAROLINA">
-      </iframe>
-    </div>
-  </div>
+    // render all pills and fetch weather
+    places.forEach(p=>{
+      const el = pillTemplate(p);
+      wrap.appendChild(el);
+      loadPlace(p, el);
+    });
+  </script>
 </body>
 </html>
