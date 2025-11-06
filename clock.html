@@ -3,75 +3,94 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Grouped World Clock — Retro Split-Flap</title>
+<title>World Clock — Retro Split-Flap (Unified Pill, C1)</title>
 <style>
   :root{
-    /* Palette E */
-    --seed:#CAD23C;    /* pill bg */
-    --grassy:#47510B;  /* text */
-    --flap-bg:#2c3107; /* split-flap tile bg */
-    --flap-fg:#e6f0a2; /* split-flap digit color */
-
-    --pill-radius:60px;
-    --shadow:0 6px 18px rgba(0,0,0,.16);
-    --inner-pad:16px;
+    /* Brand palette E */
+    --seed:#CAD23C;      /* pill background */
+    --grassy:#47510B;    /* text */
+    --flap-bg:#2C3107;   /* split-flap tile bg */
+    --flap-fg:#E6F0A2;   /* split-flap digit color */
+    --shadow:0 10px 24px rgba(0,0,0,.14), 0 2px 6px rgba(0,0,0,.10);
   }
 
   *{box-sizing:border-box}
-  html,body{height:100%}
   body{
-    margin:0; padding:20px;
+    margin:0; padding:22px;
     background:#f5f5f5; color:var(--grassy);
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
   }
 
-  .wrap{
-    display:flex; gap:20px; overflow-x:auto; padding:6px;
-    scrollbar-width:thin; scrollbar-color:#bfc6a0 #ecefe0;
-  }
-  .wrap::-webkit-scrollbar{height:8px}
-  .wrap::-webkit-scrollbar-track{background:#ecefe0;border-radius:10px}
-  .wrap::-webkit-scrollbar-thumb{background:#bfc6a0;border-radius:10px}
-
-  /* Pill */
-  .pill{
+  /* ===== Unified pill ===== */
+  .mega{
+    width:100%;
     background:var(--seed);
-    border-radius:var(--pill-radius);
+    border-radius:64px;
     box-shadow:var(--shadow);
-    color:var(--grassy);
-    flex:0 0 auto;
-    width:clamp(320px, 32vw, 520px);
-    height:clamp(220px, 28vw, 300px);
-    padding:var(--inner-pad);
+    padding:20px clamp(14px, 2.4vw, 28px);
+  }
+
+  /* Zones inside the pill – responsive grid */
+  .zones{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(10px, 1.8vw, 22px);
+    position:relative;
+  }
+
+  /* C1: thin vertical divider lines between zones (hidden on narrow stacks) */
+  @media (min-width: 860px){
+    .zone{ position:relative; }
+    .zone:not(:last-child)::after{
+      content:"";
+      position:absolute; top:4%; bottom:4%; right:-clamp(5px, .9vw, 10px);
+      width:2px; background:rgba(71,81,11,.18); border-radius:2px;
+    }
+  }
+
+  /* Break to 2 columns on medium screens */
+  @media (max-width: 1020px){
+    .zones{ grid-template-columns: repeat(2, 1fr); }
+  }
+  /* Stack vertically on small screens / narrow Notion embeds */
+  @media (max-width: 680px){
+    .zones{ grid-template-columns: 1fr; }
+  }
+
+  .zone{
     display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding: clamp(6px, 1.2vw, 10px) clamp(6px, 1.6vw, 12px);
+    text-align:center;
   }
 
-  .tz{
-    font-weight:900; letter-spacing:1px; font-size:clamp(11px,1.1vw,13px);
-    margin-bottom:10px; text-transform:uppercase;
-    opacity:.95;
+  .label{
+    font-weight:900; letter-spacing:1px; text-transform:uppercase;
+    font-size: clamp(11px, 1.1vw, 13px);
+    margin-bottom: clamp(8px, 1.2vw, 12px);
   }
 
-  /* Split-flap time row */
+  /* ===== Split-flap time row ===== */
   .time{
-    display:flex; gap:8px; align-items:stretch; justify-content:center;
-    padding:4px 2px;
+    display:flex; align-items:stretch; justify-content:center;
+    gap: clamp(6px, .8vw, 10px);
+    padding: 2px 0;
   }
 
   .tile{
     position:relative;
-    width:clamp(62px, 8vw, 96px);
-    height:clamp(68px, 9vw, 105px);
-    background:var(--flap-bg);
-    color:var(--flap-fg);
-    border-radius:12px;
+    width: clamp(58px, 7.2vw, 92px);
+    height: clamp(64px, 8.5vw, 100px);
+    background: var(--flap-bg);
+    color: var(--flap-fg);
+    border-radius: 14px;
     display:flex; align-items:center; justify-content:center;
     font-family: "Roboto Mono", SFMono-Regular, Menlo, Consolas, monospace;
-    font-weight:800; font-size:clamp(40px,5vw,64px);
+    font-weight:800; font-size: clamp(38px, 4.8vw, 62px);
     letter-spacing:1px;
     box-shadow: inset 0 -5px 0 rgba(0,0,0,.25), inset 0 6px 0 rgba(255,255,255,.06);
     overflow:hidden;
-    /* split line */
+    transform-style: preserve-3d;
+    perspective: 800px;
   }
   .tile:before, .tile:after{
     content:""; position:absolute; left:0; right:0; height:1px; background:rgba(255,255,255,.12);
@@ -80,22 +99,17 @@
   .tile:after{ top:calc(50% + 1px); opacity:.08 }
 
   .colon{
-    width:clamp(26px,3.2vw,44px);
-    background:var(--flap-fg); color:var(--flap-bg);
-    border-radius:10px;
+    width: clamp(22px, 2.8vw, 40px);
+    background: var(--flap-fg);
+    color: var(--flap-bg);
+    border-radius: 12px;
     display:flex; align-items:center; justify-content:center;
     font-family: "Roboto Mono", SFMono-Regular, Menlo, Consolas, monospace;
-    font-weight:800; font-size:clamp(26px,3.4vw,40px);
+    font-weight:900; font-size: clamp(22px, 3vw, 38px);
     box-shadow: inset 0 2px 0 rgba(255,255,255,.35);
   }
 
   /* Flip animation (minute change) */
-  .tile.flip .front{
-    animation: flipFront .6s ease-in forwards;
-  }
-  .tile.flip .back{
-    animation: flipBack .6s ease-out forwards;
-  }
   .face{
     position:absolute; inset:0;
     display:flex; align-items:center; justify-content:center;
@@ -103,38 +117,32 @@
   }
   .front{ transform:rotateX(0deg) }
   .back { transform:rotateX(-180deg) }
-
-  @keyframes flipFront{
-    0%{ transform:rotateX(0deg) }
-    100%{ transform:rotateX(180deg) }
-  }
-  @keyframes flipBack{
-    0%{ transform:rotateX(-180deg) }
-    100%{ transform:rotateX(0deg) }
-  }
+  .tile.flip .front{ animation: flipFront .45s ease-in forwards; }
+  .tile.flip .back { animation: flipBack  .45s ease-out forwards; }
+  @keyframes flipFront{ to{ transform:rotateX(180deg) } }
+  @keyframes flipBack { to{ transform:rotateX(0deg)   } }
 
   /* City list */
   .cities{
-    margin-top:clamp(8px,1.2vw,14px);
-    display:flex; flex-direction:column; gap:4px;
-    text-align:center;
+    margin-top: clamp(8px, 1.2vw, 14px);
+    display:flex; flex-direction:column; gap:3px;
   }
   .cities div{
     text-transform:uppercase;
-    font-weight:900;
-    letter-spacing:.35px;
-    font-size:clamp(11px,1.3vw,13px);
+    font-weight:900; letter-spacing:.35px;
+    font-size: clamp(11px, 1.2vw, 13px);
   }
 </style>
 </head>
 <body>
-  <div class="wrap" id="wrap">
-    <!-- Pills will be injected here -->
-  </div>
+
+<div class="mega">
+  <div class="zones" id="zones"></div>
+</div>
 
 <script>
-/* ======= CONFIG ======= */
-const GROUPS = [
+/* ===== Data ===== */
+const ZONES = [
   {
     label: "PACIFIC TIME",
     tz: "America/Los_Angeles",
@@ -152,17 +160,20 @@ const GROUPS = [
   }
 ];
 
-/* ======= RENDER ======= */
-const wrap = document.getElementById('wrap');
+/* ===== Helpers ===== */
+function hhmm(date, tz){
+  // returns "HH:MM" (12h, zero-padded) – drop AM/PM visually
+  const s = new Intl.DateTimeFormat(undefined,{
+    hour:'2-digit', minute:'2-digit', hour12:true, timeZone:tz
+  }).format(date).replace(/\s/g,'');
+  return s.slice(0,5);
+}
 
-function createTile(initial="0"){
-  const tile = document.createElement('div');
-  tile.className = 'tile';
-  tile.innerHTML = `
-    <div class="face front">${initial}</div>
-    <div class="face back">${initial}</div>
-  `;
-  return tile;
+function createTile(d="0"){
+  const t = document.createElement('div');
+  t.className = 'tile';
+  t.innerHTML = `<div class="face front">${d}</div><div class="face back">${d}</div>`;
+  return t;
 }
 function createColon(){
   const c = document.createElement('div');
@@ -171,102 +182,75 @@ function createColon(){
   return c;
 }
 
-function makePill(group){
-  const pill = document.createElement('div');
-  pill.className = 'pill';
+/* ===== Render zones ===== */
+const zonesEl = document.getElementById('zones');
+const zoneTiles = []; // store tile refs per zone
 
-  pill.innerHTML = `<div class="tz">${group.label}</div>`;
-  const timeRow = document.createElement('div');
-  timeRow.className = 'time';
+ZONES.forEach(z=>{
+  const zone = document.createElement('section');
+  zone.className = 'zone';
 
-  // HH:MM -> 4 tiles + colon
+  const label = document.createElement('div');
+  label.className = 'label';
+  label.textContent = z.label;
+
+  const time = document.createElement('div');
+  time.className = 'time';
   const t1 = createTile('0');
   const t2 = createTile('0');
   const t3 = createTile('0');
   const t4 = createTile('0');
-  timeRow.append(t1, t2, createColon(), t3, t4);
+  time.append(t1,t2,createColon(),t3,t4);
 
   const cities = document.createElement('div');
   cities.className = 'cities';
-  group.cities.forEach(c => {
-    const d = document.createElement('div');
-    d.textContent = c;
-    cities.appendChild(d);
+  z.cities.forEach(c=>{
+    const it = document.createElement('div');
+    it.textContent = c;
+    cities.appendChild(it);
   });
 
-  pill.append(timeRow, cities);
-  wrap.appendChild(pill);
-  return { tiles:[t1,t2,t3,t4] };
+  zone.append(label,time,cities);
+  zonesEl.appendChild(zone);
+  zoneTiles.push([t1,t2,t3,t4]);
+});
+
+/* ===== Flip logic ===== */
+let last = [];
+
+function setFaces(tile, d){
+  tile.querySelector('.front').textContent = d;
+  tile.querySelector('.back').textContent  = d;
 }
-
-const pills = GROUPS.map(makePill);
-
-/* ======= TIME / FLIP ======= */
-let prevStrs = [];
-
-function formatHHMM(date, tz){
-  // 12-hour with leading zeros, minutes only
-  const parts = new Intl.DateTimeFormat(undefined, {
-    hour:'2-digit', minute:'2-digit', hour12:true, timeZone:tz
-  }).format(date).replace(/\s/g,''); // e.g., "09:42AM"
-  // take only HH:MM (ignore AM/PM for display)
-  return parts.slice(0,5);
-}
-
-function setDigits(tile, digit){
-  tile.querySelector('.front').textContent = digit;
-  tile.querySelector('.back').textContent = digit;
-}
-
-function flipTo(tile, nextDigit){
-  const front = tile.querySelector('.front');
-  const back  = tile.querySelector('.back');
-  // Set back to nextDigit, keep front current until flip completes
-  back.textContent = nextDigit;
-  tile.classList.remove('flip'); // reset if still mid-animation
-  // force reflow to restart animation
-  void tile.offsetWidth;
+function flipTo(tile, d){
+  tile.querySelector('.back').textContent = d;
+  tile.classList.remove('flip'); void tile.offsetWidth; // restart anim
   tile.classList.add('flip');
-  // After animation, set both faces to nextDigit and clear flip
-  setTimeout(() => {
-    front.textContent = nextDigit;
-    back.textContent  = nextDigit;
-    tile.classList.remove('flip');
-  }, 600);
+  setTimeout(()=>{ setFaces(tile,d); tile.classList.remove('flip'); }, 450);
 }
 
-function updateAll(){
+function tick(){
   const now = new Date();
-  GROUPS.forEach((g, i) => {
-    const str = formatHHMM(now, g.tz); // "09:42"
-    const digits = [str[0], str[1], str[3], str[4]];
+  ZONES.forEach((z, i)=>{
+    const s = hhmm(now, z.tz);           // "09:42"
+    const digs = [s[0],s[1],s[3],s[4]];  // ["0","9","4","2"]
 
-    if(!prevStrs[i]){
-      // first render (no animation)
-      digits.forEach((d, idx) => setDigits(pills[i].tiles[idx], d));
-      prevStrs[i] = digits.join('');
+    if(!last[i]){ // first paint
+      digs.forEach((d, j)=> setFaces(zoneTiles[i][j], d));
+      last[i] = digs.join('');
       return;
     }
 
-    // compare to previous; flip tiles that changed
-    const prev = prevStrs[i];
-    const prevDigits = [prev[0],prev[1],prev[2],prev[3]];
-    digits.forEach((d, idx) => {
-      if(d !== prevDigits[idx]) flipTo(pills[i].tiles[idx], d);
+    const prev = last[i].split('');
+    digs.forEach((d, j)=>{
+      if(d !== prev[j]) flipTo(zoneTiles[i][j], d);
     });
-    prevStrs[i] = digits.join('');
+    last[i] = digs.join('');
   });
 }
 
-// Initial draw and then check every second.
-// Flip will only occur when a digit actually changes (i.e., minute changes).
-updateAll();
-setInterval(updateAll, 1000);
-
-// Resize observer to keep tiles nicely centered on very narrow columns in Notion
-new ResizeObserver(() => {
-  // nothing needed here right now; hook left for future fine-tuning
-}).observe(wrap);
+tick();
+setInterval(tick, 1000); // check per second; flips only on change
 </script>
 </body>
 </html>
